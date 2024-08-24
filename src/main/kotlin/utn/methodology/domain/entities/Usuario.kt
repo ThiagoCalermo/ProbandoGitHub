@@ -1,24 +1,40 @@
 package utn.methodology.domain.entities
 
 class Usuario(
-    private val Id: Int,
-    private var Name: String,
-    private var Email: String,
-    private var Password: String
+    private val uuid: Int,
+    private var name: String,
+    private var userName: String,
+    private var email: String,
+    private var password: String
 ){
-    fun getId(): Int { return Id }
-    fun update(name: String, email: String, password: String) {
-        Name = name
-        Email = email
-        Password = password
+    companion object {
+        fun formPrimitives(primitives: Map<String, String>): Usuario{
+            val usuario = Usuario(
+                primitives["uuid"] as Int,
+                primitives["name"] as String,
+                primitives["userName"] as String,
+                primitives["email"] as String,
+                primitives["password"] as String
+            )
+            return usuario
+        }
     }
-    fun checkName(Name: String) {
-
+    fun getId(): Int {
+        return this.uuid
     }
-    fun checkPassword(Pass: String){
-
+    fun update(name: String, userName: String, email: String, password: String){
+        this.name = name
+        this.userName = userName
+        this.email = email
+        this.password = password
     }
-    fun checkEmail(Email: String){
-
+    fun toPrimitives(): Map<String, String> {
+        return mapOf(
+            "uuid" to this.uuid.toString(),
+            "name" to this.name,
+            "userName" to this.userName,
+            "email" to this.email,
+            "password" to this.password
+        )
     }
 }
