@@ -12,12 +12,12 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.userRouter() {
+fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONGO
     val mongoDatabase = connectToMongoDB()      // Action y CreateUserHandler ya creados
 
     //val userMongoUserRepository = MongoUserRepository(mongoDatabase)
 
-//    val createUserAction = CreateUserAction(CreateUserHandler(userMongoUserRepository))
+    val createUserAction = CreateUserAction(CreateUserHandler(userMongoUserRepository))
 
     //val updateUserAction = UpdateUserAction(UpdateUserHandler(userMongoUserRepository))
     //val findUserByIdAction = FindUserByIdAction(FindUserByIdHandler(userMongoUserRepository))
