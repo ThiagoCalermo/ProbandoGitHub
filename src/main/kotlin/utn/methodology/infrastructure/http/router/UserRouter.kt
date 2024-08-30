@@ -31,6 +31,14 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
 
             call.respond(HttpStatusCode.Created, mapOf("message" to "ok"))
         }
+        get("/users/{userName}"){
+            val query = FindUserByUsernameQuery(call.parameters["id"].toString())
+
+            val result = FindUserByUsernameAction.execute(query)
+
+            call.respond(HttpStatusCode.OK, result)
+
+        }
 
 //        put("/users/{id}") {
 //            val body = call.receive<UpdateUserCommand>()
