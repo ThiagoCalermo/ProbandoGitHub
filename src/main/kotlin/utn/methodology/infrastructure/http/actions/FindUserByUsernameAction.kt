@@ -10,9 +10,7 @@ class FindUserByUsernameAction(
     fun execute(query: FindUserByUsernameQuery): Map<String, String> {
         query
             .validate()
-            .let {
-                return handler.handle(it)
-            }
+            .let { return handler.handle(it) }
 
     }
 }
