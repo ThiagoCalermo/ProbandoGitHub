@@ -50,16 +50,16 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
 //            call.respond(HttpStatusCode.OK, mapOf("message" to "updated"))
 //        }
 
-//        get("/users/{id}") {
-//
-//            val query = FindUserByIdQuery(call.parameters["id"].toString())
-//
-//            val result = findUserByIdAction.execute(query)
-//
-//            call.respond(HttpStatusCode.OK, result)
-//
-//        }
-//
+        get("/users/{id}") {
+
+            val query = FindUserByIdQuery(call.parameters["id"].toString())
+
+            val result = findUserByIdAction.execute(query)
+
+            call.respond(HttpStatusCode.OK, result)
+
+        }
+
 //        get("/users") {
 //            val users = userMongoUserRepository.findAll();
 //
