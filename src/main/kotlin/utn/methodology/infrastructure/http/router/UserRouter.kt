@@ -11,23 +11,27 @@ import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import utn.methodology.application.queries.FindUserByIdQuery
+import utn.methodology.application.queries.FindUserByUsernameQuery
+import utn.methodology.infrastructure.http.actions.FindUserByIdAction
+import utn.methodology.infrastructure.http.actions.FindUserByUsernameAction
 
 fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONGO
     val mongoDatabase = connectToMongoDB()      // Action y CreateUserHandler ya creados
 
     //val userMongoUserRepository = MongoUserRepository(mongoDatabase)
 
-    val createUserAction = CreateUserAction(CreateUserHandler(userMongoUserRepository))
+    //val createUserAction = CreateUserAction(CreateUserHandler(userMongoUserRepository))
 
     //val updateUserAction = UpdateUserAction(UpdateUserHandler(userMongoUserRepository))
     //val findUserByIdAction = FindUserByIdAction(FindUserByIdHandler(userMongoUserRepository))
-    //val deleteUserAction = DeleteUserAction(DeleteUserHandler(userMongoUserRepository))
+
 
     routing {
 
         post("/users") {
             val body = call.receive<CreateUserCommand>()
-            createUserAction.execute(body);
+            CreateUserAction.execute(body);
 
             call.respond(HttpStatusCode.Created, mapOf("message" to "ok"))
         }
@@ -54,7 +58,7 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
 
             val query = FindUserByIdQuery(call.parameters["id"].toString())
 
-            val result = findUserByIdAction.execute(query)
+            val result = FindUserByIdAction.execute(query)
 
             call.respond(HttpStatusCode.OK, result)
 

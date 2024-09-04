@@ -1,3 +1,4 @@
+package utn.methodology.infrastructure.http.actions
 
 import utn.methodology.application.commands.CreateUserCommand
 import utn.methodology.application.commandhandlers.CreateUserHandler
@@ -13,33 +14,36 @@ import io.ktor.server.routing.*
 import utn.methodology.application.queries.FindUserByUsernameQuery
 import utn.methodology.domain.entities.Usuario
 
-fun Application.userRouter() {
-    val mongoDatabase = connectToMongoDB()
+class FindUserByUsernameAction {
 
-    //val userMongoUserRepository = MongoUserRepository(mongoDatabase)
+    fun Application.userRouter() {
+        val mongoDatabase = connectToMongoDB()
 
-    //val FindUserByUsernameAction = FindUserByUsernameAction(CreateUserHandler(userMongoUserRepository))
+        //val userMongoUserRepository = MongoUserRepository(mongoDatabase)
 
-    //val findUserByUsernameAction = FindUserByUsernameAction(FindUserByIdHandler(userMongoUserRepository))
+        //val FindUserByUsernameAction = FindUserByUsernameAction(CreateUserHandler(userMongoUserRepository))
+
+        //val findUserByUsernameAction = FindUserByUsernameAction(FindUserByIdHandler(userMongoUserRepository))
 
 
-    routing {    // GET: RECUPERAR DATOS PARA SU BUSQUEDA
+        routing {    // GET: RECUPERAR DATOS PARA SU BUSQUEDA
 
-        get("/users/{usuario}") {    // username o "Nombre"?
-            val username = call.parameters["usuario"]?: throw BadRequestException("Es requerido un nombre de usuario")
-            val query = FindUserByUsernameQuery(username)
+            get("/users/{Usuario}") {    // username o "Nombre"?
+                val username = call.parameters["Usuario"]?: throw BadRequestException("Es requerido un nombre de usuario")
+                val query = FindUserByUsernameQuery(username)
 
-            val user = FindUserByUsernameAction.execute(query)
+                val user = FindUserByUsernameAction.execute(query)
 
-            call.respond(user?.let { HttpStatusCode.OK } ?: HttpStatusCode.NotFound, user)
+                call.respond(user?.let { HttpStatusCode.OK } ?: HttpStatusCode.NotFound, user)
+            }
+
         }
 
-        }
 
+        //get("/users") {
+            //val users = userMongoUserRepository.findAll();
 
-        get("/users") {
-           val users = userMongoUserRepository.findAll();
-
-            call.respond(HttpStatusCode.OK, users.map { it.toPrimitives() })
-       }
-
+            //call.respond(HttpStatusCode.OK, users.map { it.toPrimitives() })
+        //}
+}
+    }

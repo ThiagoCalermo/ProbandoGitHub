@@ -1,12 +1,12 @@
 package utn.methodology.application.queryhandlers
 
-//import utn.methodology.application.queries.FindUserByIdQuery    FALTA
+import utn.methodology.application.queries.FindUserByIdQuery
 //import utn.methodology.infrastructure.persistence.MongoUserRepository
 import io.ktor.server.plugins.*
 import utn.methodology.application.queries.FindUserByUsernameQuery
 
 class FindUserByIdHandler(
-    private val usuarioRepositorio: MongoUserRepository
+    //private val usuarioRepositorio: MongoUserRepository
 ) {
 
     fun handle(query: FindUserByUsernameQuery): Map<String, String> {
