@@ -1,7 +1,7 @@
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.UpdateOptions
-import com.domain.entities.User
+import utn.methodology.domain.entities.Usuario
 import org.bson.Document
 
 
@@ -13,7 +13,7 @@ class repositorioUsuario (private val database: MongoDatabase) {
         colección = database.getCollection("usuarios") as MongoCollection<Document>
     }
 
-    fun GuardaroActualizar (Usuario: User) {
+    fun GuardaroActualizar (Usuario: Usuario) {
         try {
             val opcion = UpdateOptions().upsert(true)
             val filtrar = Document("id", Usuario.getId())

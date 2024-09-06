@@ -11,7 +11,7 @@ class FindUserByIdHandler(
 
     fun handle(query: FindUserByUsernameQuery): Map<String, String> {
 
-        val usuario = usuarioRepositorio.findOne(query.id)
+        val usuario = repositorioUsuario.findOne(query.id)
 
         if (usuario == null) throw NotFoundException("Id de usuario: ${query.id} no encontrado")
 

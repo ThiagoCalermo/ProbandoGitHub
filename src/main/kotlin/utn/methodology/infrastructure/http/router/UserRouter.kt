@@ -19,7 +19,7 @@ import utn.methodology.infrastructure.http.actions.FindUserByUsernameAction
 fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONGO
     val mongoDatabase = connectToMongoDB()      // Action y CreateUserHandler ya creados
 
-    //val userMongoUserRepository = MongoUserRepository(mongoDatabase)
+    val userMongoUserRepository = MongoUserRepository(mongoDatabase)
 
     //val createUserAction = CreateUserAction(CreateUserHandler(userMongoUserRepository))
 
@@ -71,14 +71,6 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
 //        }
 
 
-//        delete("/users/{id}") {
-//
-//            val query = DeleteUserCommand(call.parameters["id"].toString())
-//
-//            deleteUserAction.execute(query)
-//
-//            call.respond(HttpStatusCode.NoContent)
-//        }
     }
 }
 
