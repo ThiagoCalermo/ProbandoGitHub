@@ -44,15 +44,6 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
 
         }
 
-//        put("/users/{id}") {
-//            val body = call.receive<UpdateUserCommand>()
-//
-//            body.id = call.parameters["id"].toString() ?: throw IllegalArgumentException("No ID Found")
-//
-//            updateUserAction.execute(body);
-//
-//            call.respond(HttpStatusCode.OK, mapOf("message" to "updated"))
-//        }
 
         get("/users/{id}") {
 

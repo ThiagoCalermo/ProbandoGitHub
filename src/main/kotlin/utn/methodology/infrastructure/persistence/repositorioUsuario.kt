@@ -23,17 +23,17 @@ class repositorioUsuario (private val database: MongoDatabase) {
     }
 
 
-    fun RecuperarPorId (uuid: String): User? {
-        var usuario: User? = null
+    fun RecuperarPorId (uuid: String): Usuario? {
+        var usuario: Usuario? = null
         try {
             val filtrar = Document("uuid", uuid)
             val primitives = collección.find(filtrar).firstOrNull()
-            usuario=User.fromPrimitives(primitives as Map<String, Any>)
+            usuario=Usuario.fromPrimitives(primitives as Map<String, Any>)
         } catch (e: Exception){ println ("no se pudo encontrar el usuario con ese id: ${e.message} ")}
         return usuario
     }
 
-    fun recuperarTodos(): List<User> {
+    fun recuperarTodos(): List<Usuario> {
         val primitives = colección.find().map { it as Document }.toList()
         return primitives.map { User.fromPrimitives(it.toMap() as Map<String, String>) }
     }

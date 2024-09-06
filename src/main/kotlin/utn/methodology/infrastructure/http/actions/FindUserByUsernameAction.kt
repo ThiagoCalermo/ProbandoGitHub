@@ -19,7 +19,7 @@ class FindUserByUsernameAction {
     fun Application.userRouter() {
         val mongoDatabase = connectToMongoDB()
 
-        //val userMongoUserRepository = MongoUserRepository(mongoDatabase)
+        val userMongoUserRepository = MongoUserRepository(mongoDatabase)
 
         //val FindUserByUsernameAction = FindUserByUsernameAction(CreateUserHandler(userMongoUserRepository))
 
