@@ -13,13 +13,14 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import utn.methodology.application.queries.FindUserByUsernameQuery
 import utn.methodology.domain.entities.Usuario
+import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
 
 class FindUserByUsernameAction {
 
     fun Application.userRouter() {
         val mongoDatabase = connectToMongoDB()
 
-        val userMongoUserRepository = MongoUserRepository(mongoDatabase)
+        val userMongoUserRepository = RepositorioUsuario(mongoDatabase)
 
         //val FindUserByUsernameAction = FindUserByUsernameAction(CreateUserHandler(userMongoUserRepository))
 

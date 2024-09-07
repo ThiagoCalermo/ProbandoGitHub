@@ -1,16 +1,16 @@
 package utn.methodology.domain.entities
 
 class Usuario(
-    private val uuid: Int,
+    private val uuid: String,
     private var name: String,
     private var userName: String,
     private var email: String,
     private var password: String
 ){
     companion object {
-        fun formPrimitives(primitives: Map<String, String>): Usuario{
+        fun fromPrimitives(primitives: Map<String, String>): Usuario{
             val usuario = Usuario(
-                primitives["uuid"] as Int,
+                primitives["uuid"] as String,
                 primitives["name"] as String,
                 primitives["userName"] as String,
                 primitives["email"] as String,
@@ -19,7 +19,7 @@ class Usuario(
             return usuario
         }
     }
-    fun getId(): Int {
+    fun getId(): String {
         return this.uuid
     }
     fun update(name: String, userName: String, email: String, password: String){
