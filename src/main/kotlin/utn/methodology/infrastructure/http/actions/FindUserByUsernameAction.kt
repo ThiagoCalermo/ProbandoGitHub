@@ -11,40 +11,23 @@ import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import utn.methodology.application.queries.FindUserByIdQuery
 import utn.methodology.application.queries.FindUserByUsernameQuery
+import utn.methodology.application.queryhandlers.FindUserByIdHandler
+import utn.methodology.application.queryhandlers.FindUserByUsernameHandler
 import utn.methodology.domain.entities.Usuario
 import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
 
-class FindUserByUsernameAction {
+class FindUserByUsernameAction(
+    private val handler: FindUserByUsernameHandler
+) {
 
-    fun Application.userRouter() {
-        val mongoDatabase = connectToMongoDB()
-
-        val userMongoUserRepository = RepositorioUsuario(mongoDatabase)
-
-        //val FindUserByUsernameAction = FindUserByUsernameAction(CreateUserHandler(userMongoUserRepository))
-
-        //val findUserByUsernameAction = FindUserByUsernameAction(FindUserByIdHandler(userMongoUserRepository))
-
-
-        routing {    // GET: RECUPERAR DATOS PARA SU BUSQUEDA
-
-            get("/users/{Usuario}") {    // username o "Nombre"?
-                val username = call.parameters["Usuario"]?: throw BadRequestException("Es requerido un nombre de usuario")
-                val query = FindUserByUsernameQuery(username)
-
-                val user = FindUserByUsernameAction.execute(query)
-
-                call.respond(user?.let { HttpStatusCode.OK } ?: HttpStatusCode.NotFound, user)
+    fun execute(query: FindUserByUsernameQuery): Map<String, String> {
+        query
+            .validate()
+            .let {
+                return handler.handle(it)
             }
 
-        }
-
-
-        //get("/users") {
-            //val users = userMongoUserRepository.findAll();
-
-            //call.respond(HttpStatusCode.OK, users.map { it.toPrimitives() })
-        //}
-}
     }
+}

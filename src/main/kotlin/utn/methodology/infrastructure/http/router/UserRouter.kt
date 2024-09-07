@@ -10,12 +10,13 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import utn.methodology.application.commandhandlers.CreateUserHandler
-import utn.methodology.infrastructure.persistence.repositories.repositorioUsuario
+import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
 import utn.methodology.application.queries.FindUserByIdQuery
 import utn.methodology.application.queries.FindUserByUsernameQuery
+import utn.methodology.application.queryhandlers.FindUserByIdHandler
+import utn.methodology.application.queryhandlers.FindUserByUsernameHandler
 import utn.methodology.infrastructure.http.actions.FindUserByIdAction
 import utn.methodology.infrastructure.http.actions.FindUserByUsernameAction
-import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
 
 fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONGO
     val mongoDatabase = connectToMongoDB()      // Action y CreateUserHandler ya creados
@@ -24,8 +25,9 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
 
     val createUserAction = CreateUserAction(CreateUserHandler(userMongoUserRepository))
 
-    //val updateUserAction = UpdateUserAction(UpdateUserHandler(userMongoUserRepository))
-    //val findUserByIdAction = FindUserByIdAction(FindUserByIdHandler(userMongoUserRepository))
+    // val updateUserAction = UpdateUserAction(UpdateUserHandler(userMongoUserRepository))
+    val findUserByIdAction = FindUserByIdAction(FindUserByIdHandler(userMongoUserRepository))
+    val findUserByUsernameAction = FindUserByUsernameAction(FindUserByUsernameHandler(userMongoUserRepository))
 
 
     routing {
@@ -39,7 +41,7 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
         get("/users/{userName}"){
             val query = FindUserByUsernameQuery(call.parameters["id"].toString())
 
-            val result = FindUserByUsernameAction.execute(query)
+            val result = findUserByUsernameAction.execute(query)
 
             call.respond(HttpStatusCode.OK, result)
 
@@ -50,7 +52,7 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
 
             val query = FindUserByIdQuery(call.parameters["id"].toString())
 
-            val result = FindUserByIdAction.execute(query)
+            val result = findUserByIdAction.execute(query)
 
             call.respond(HttpStatusCode.OK, result)
 
