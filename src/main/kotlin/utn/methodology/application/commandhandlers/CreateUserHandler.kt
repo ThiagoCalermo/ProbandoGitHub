@@ -17,10 +17,10 @@ class CreateUserHandler(
     fun handle(command: CreateUserCommand) {
         val usuario = Usuario(
             uuid = UUID.randomUUID().toString(),
-            name = command.Nombre,
-            userName = command.UserName,
+            name = command.name,
+            userName = command.userName,
             email = command.email,
-            password = command.Password
+            password = command.password
         )
         usuarioRepositorio.GuardaroActualizar(usuario)
     }

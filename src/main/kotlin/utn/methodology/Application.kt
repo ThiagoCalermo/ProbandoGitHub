@@ -11,6 +11,7 @@ import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import org.slf4j.LoggerFactory
+import utn.methodology.infrastructure.http.router.userRouter
 import utn.methodology.infrastructure.persistence.configureDatabases
 
 fun main(args: Array<String>) {
@@ -41,7 +42,7 @@ fun Application.module() {
     }
 
     configureDatabases()
-    //userRouter()
+    userRouter()
     errorHandler()
 }
 
