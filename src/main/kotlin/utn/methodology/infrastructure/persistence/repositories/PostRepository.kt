@@ -9,16 +9,27 @@ import org.bson.Document
 
 class PostRepository (private val database: MongoDatabase) {
 
-    fun save(post: Post) {
-        // Aquí implementas la lógica para guardar el post en MongoDB
-        val postsCollection = database.getCollection("posts")
-        val postDocument = Document()
-            .append("id", post.id)
-            .append("userId", post.userId)
-            .append("message", post.message)
-            .append("createdAt", post.createdAt.toString())
+    private var colección: MongoCollection<Document>
 
-        postsCollection.insertOne(postDocument)
+    init {
+        colección = database.getCollection("posts") as MongoCollection<Document>
+    }
+
+    fun guardaroActualizar(post: Post) {
+        try {
+            val opcion = UpdateOptions().upsert(true) // Permite insertar o actualizar
+            val filtrar = Document("id", post.id)     // Filtro basado en el ID del post
+            val actualizar = Document("\$set", post.toPrimitives()) // Datos a actualizar
+
+            colección.updateOne(filtrar, actualizar, opcion) // Upsert: inserta o actualiza el post
+        } catch (e: Exception) {
+            println("Ocurrió un error al guardar o actualizar el post: ${e.message}")
+        }
+    }
+
+    fun ListAll(): List<Post> {
+        val primitives = colección.find().map { it as Document }.toList()
+        return primitives.map { Usuario.fromPrimitives(it.toMap() as Map<String, String>) }
     }
 
 

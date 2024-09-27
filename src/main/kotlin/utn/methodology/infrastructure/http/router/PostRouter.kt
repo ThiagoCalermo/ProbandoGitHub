@@ -56,6 +56,35 @@ fun Application.postRouter() {
                 call.respond(HttpStatusCode.NotFound, "Post no encontrado o no pertenece al usuario")
             }
         }
+        get("/posts") {
+            // Extraer parámetros de búsqueda desde la query
+            val userId = call.request.queryParameters["user_id"]?.toIntOrNull()
+            val order = call.request.queryParameters["order"] ?: "DESC" // Valor por defecto DESC
+            val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 10 // Valor por defecto 10
+            val offset = call.request.queryParameters["offset"]?.toIntOrNull() ?: 0 // Valor por defecto 0
+
+            // Validar que el userId no sea nulo
+            if (userId == null) {
+                call.respond(HttpStatusCode.BadRequest, "Falta el parámetro 'user_id'")
+                return@get
+            }
+
+            try {
+                // Validar parámetros adicionales
+                if (limit !in 1..100) throw IllegalArgumentException("El límite debe estar entre 1 y 100")
+                if (offset < 0) throw IllegalArgumentException("El offset debe ser mayor o igual a 0")
+                if (order.uppercase() !in listOf("ASC", "DESC")) throw IllegalArgumentException("El orden debe ser 'ASC' o 'DESC'")
+
+                // Obtener posts desde el servicio
+                val posts = postService.getPostsForUser(userId, order.uppercase(), limit, offset)
+
+                // Responder con los posts obtenidos
+                call.respond(HttpStatusCode.OK, posts)
+            } catch (e: IllegalArgumentException) {
+                call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, "Ocurrió un error inesperado")
+            }
+        }
     }
 }
-
