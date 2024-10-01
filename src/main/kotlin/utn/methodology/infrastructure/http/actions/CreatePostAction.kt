@@ -2,24 +2,19 @@ package utn.methodology.infrastructure.http.actions
 
 import utn.methodology.application.commandhandlers.CreatePostHandler
 import utn.methodology.application.commands.CreatePostCommand
-import com.mongodb.client.MongoCollection
-import com.mongodb.client.MongoDatabase
-import com.mongodb.client.model.UpdateOptions
-import utn.methodology.domain.entities.Post
-import org.bson.Document
 
-class CreatePostAction(private val repository: PostRepository) {
+class CreatePostAction(
+    private val handler: CreatePostHandler
+) {
 
-    fun execute(command: CreatePostCommand) {
-        validatePost(command.message)
+    fun execute(body: CreatePostCommand) {
 
-        val post = Post(
-            id = UUID.randomUUID().toString(),  // Genera un ID único
-            userId = command.userId,
-            message = command.message,
-            createdAt = LocalDateTime.now()
-        )
+        body.validate().let {
+            handler.handle(it)
+        }
 
-        repository.save(post)
     }
 }
+
+// Estructura de la request que viene en el body
+data class CreatePostRequest(val userId: Int, val message: String)

@@ -26,10 +26,42 @@ class PostRepository (private val database: MongoDatabase) {
             println("Ocurrió un error al guardar o actualizar el post: ${e.message}")
         }
     }
+    fun deletePost(postId: Int): Boolean {
+
+            val filter = Document("_id", Post.getId());
+
+            colección.deleteOne(filter)
+    }
 
     fun ListAll(): List<Post> {
         val primitives = colección.find().map { it as Document }.toList()
-        return primitives.map { Usuario.fromPrimitives(it.toMap() as Map<String, String>) }
+        return primitives.map { Post.fromPrimitives(it.toMap() as Map<String, String>) }
+    }
+
+    fun findOne(id: Int): Post? {
+        val filter = Document("_id", id);
+
+        val primitives = colección.find(filter).firstOrNull();
+
+        if (primitives == null) {
+            return null;
+        }
+
+        return Post.fromPrimitives(primitives as Map<String, String>)
+    }
+    fun findAll(): List<Post> {
+
+        val primitives = colección.find().map { it as Document }.toList();
+
+        return primitives.map {
+            Post.fromPrimitives(it.toMap() as Map<String, String>)
+        };
+    }
+
+    fun delete(post: Post) {
+        val filter = Document("_id", post.getId());
+
+        colección.deleteOne(filter)
     }
 
 

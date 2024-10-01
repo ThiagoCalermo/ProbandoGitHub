@@ -5,7 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CreatePostCommand(
     val userId: String,
-    val message: String
+    val message: String,
+
 ) {
     fun validate(): CreatePostCommand {
         if (message.length > 280) {
@@ -14,4 +15,5 @@ data class CreatePostCommand(
 
         return this
     }
+
 }
