@@ -7,7 +7,7 @@ class Usuario(
     private var userName: String,
     private var email: String,
     private var password: String,
-    private var seguidos: List<String> = emptyList()
+    var seguidos: List<String> = emptyList()
     private var seguidores: List<String> = emptyList()
 ){
     companion object {

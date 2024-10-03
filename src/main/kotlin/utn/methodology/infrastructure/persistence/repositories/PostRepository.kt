@@ -2,6 +2,8 @@ package utn.methodology.infrastructure.persistence.repositories
 
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
+import com.mongodb.client.model.Indexes.descending
+import com.mongodb.client.model.Sorts.descending
 import com.mongodb.client.model.UpdateOptions
 import utn.methodology.domain.entities.Post
 import org.bson.Document
@@ -31,6 +33,7 @@ class PostRepository (private val database: MongoDatabase) {
             val filter = Document("_id", Post.getId());
 
             colección.deleteOne(filter)
+
     }
 
     fun ListAll(): List<Post> {
@@ -62,6 +65,14 @@ class PostRepository (private val database: MongoDatabase) {
         val filter = Document("_id", post.getId());
 
         colección.deleteOne(filter)
+    }
+
+    fun findPostsByFollowing(followingUserIds: List<String>): List<Post> {
+        val filter = Document("userId", Document("\$in", followingUserIds))
+        return colección.find(filter)                               // funcion abi para encontrar posts
+            .sort(descending(Post::createdAt))
+            .toList()
+            .map { Post.fromPrimitives(it.toMap() as Map<String, String>) }
     }
 
 

@@ -52,4 +52,10 @@ class RepositorioUsuario (private val database: MongoDatabase) {
         val filtrar = Document("email", email)
         return colección.find(filtrar).firstOrNull() != null
     }
+
+    fun getFollowing(userId: String): List<String> {
+        val usuario = RecuperarPorId(userId) ?: return emptyList()
+        return usuario.seguidos
+    }       // codigo Abi: metodo getFollowing para FollowRouter. (hice "seguidos" publico)
+
 }

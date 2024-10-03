@@ -6,7 +6,7 @@ class Post(
     var id: Int? = null,    // El id se genera automáticamente al persistir
     var userId: String,
     var message: String,
-    var createdAt: String = LocalDateTime.now().toString()
+    var createdAt: String = LocalDateTime.now().toString()              // VER DESCENDING
 ) {
     companion object {
         fun fromPrimitives(primitives: Map<String, String>): Post {
