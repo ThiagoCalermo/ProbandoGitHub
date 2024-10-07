@@ -7,8 +7,8 @@ class Usuario(
     private var userName: String,
     private var email: String,
     private var password: String,
-    var seguidos: List<String> = emptyList()
-    private var seguidores: List<String> = emptyList()
+    var seguidos: List<String> = emptyList(),
+    internal var seguidores: List<String> = emptyList()   // private -> internal (no private)
 ){
     companion object {
         fun fromPrimitives(primitives: Map<String, String>): Usuario{

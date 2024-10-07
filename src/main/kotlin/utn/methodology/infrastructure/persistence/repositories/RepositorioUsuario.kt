@@ -4,8 +4,8 @@ package utn.methodology.infrastructure.persistence.repositories
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.UpdateOptions
-import utn.methodology.domain.entities.Usuario
 import org.bson.Document
+import utn.methodology.domain.entities.Usuario
 
 class RepositorioUsuario (private val database: MongoDatabase) {
 
@@ -19,9 +19,9 @@ class RepositorioUsuario (private val database: MongoDatabase) {
         val opcion = UpdateOptions().upsert(true)
         val filtrar = Document("uuid", usuario.getId())
         val actualizar = Document("\$set", usuario.toPrimitives())
-            .put("seguidos", usuario.seguidos)
-            .put("seguidores", usuario.seguidores)
-        colección.updateOne(filter, update, options)
+            .append("seguidos", usuario.seguidos)       // En lugar de usar put, usamos el método append de
+            .append("seguidores", usuario.seguidores)   // la clase Document, forma adecuada de agregar
+        colección.updateOne(filtrar, actualizar, opcion) // campos en MongoDB con Kotlin.
     }
 
     fun RecuperarPorId (uuid: String): Usuario? {
