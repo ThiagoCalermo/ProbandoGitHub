@@ -21,9 +21,9 @@ class Post(
 
     }
 
-    fun getId(): Int? {
+    /*fun getId(): Int? {
         return this.id
-    }
+    }*/
 
     fun update(id: Int?, userId: String, message: String, createdAt: String){
         this.id = id

@@ -34,28 +34,59 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
 
         post("/users") {
             val body = call.receive<CreateUserCommand>()
-            createUserAction.execute(body);
+
+            try {
+                createUserAction.execute(body);
+                call.respond(HttpStatusCode.Created, mapOf("message" to "User created successfully"))
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, "Error creating user")
+            }
 
             call.respond(HttpStatusCode.Created, mapOf("message" to "ok"))
         }
         get("/users/{userName}"){
-            val query = FindUserByUsernameQuery(call.parameters["userName"].toString())
+            val username = call.request.queryParameters["username"]
 
-            val result = findUserByUsernameAction.execute(query)
+            if (username.isNullOrBlank()) {
+                call.respond(HttpStatusCode.BadRequest, "Enter username")
+                return@get
+            }
 
-            call.respond(HttpStatusCode.OK, result)
+            //val query = FindUserByUsernameQuery(call.parameters["userName"].toString())
+            val query = FindUserByUsernameQuery(username)
 
+            try {
+                val result = findUserByUsernameAction.execute(query)
+                if (!result.isEmpty()) {
+                    call.respond(HttpStatusCode.OK, result)
+                } else {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                }
+            } catch (error: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, "Error")
+            }
         }
-
-
         get("/users/{id}") {
+            val id = call.request.queryParameters["id"]
 
-            val query = FindUserByIdQuery(call.parameters["id"].toString())
+            if (id.isNullOrBlank()) {
+                call.respond(HttpStatusCode.BadRequest, "Enter id")
+                return@get
+            }
 
-            val result = findUserByIdAction.execute(query)
+            //val query = FindUserByIdQuery(call.parameters["id"].toString())
+            val query = FindUserByIdQuery(id)
 
-            call.respond(HttpStatusCode.OK, result)
-
+            try {
+                val result = findUserByIdAction.execute(query)
+                if (!result.isEmpty()) {
+                    call.respond(HttpStatusCode.OK, result)
+                } else {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                }
+            } catch (error: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, "Error")
+            }
         }
 
 //        get("/users") {

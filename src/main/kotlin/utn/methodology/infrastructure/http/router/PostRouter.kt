@@ -11,6 +11,9 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import utn.methodology.application.commandhandlers.CreatePostHandler
 import utn.methodology.application.commands.DeletePostCommand
+import utn.methodology.application.queries.FindPostByIdQuery
+import utn.methodology.application.queryhandlers.FindPostByIdHandler
+import utn.methodology.infrastructure.http.actions.FindPostByIdAction
 import utn.methodology.infrastructure.persistence.repositories.PostRepository
 
 
@@ -21,12 +24,12 @@ private fun Any.execute(query: DeletePostCommand) {
 fun Application.postRouter() {             // NECESITAMOS UNA BASE DE DATOS MONGO
     val mongoDatabase = connectToMongoDB()      // Action y CreateUserHandler ya creados
 
-    val MongoPostRepository = PostRepository(mongoDatabase)
+    val mongoPostRepository = PostRepository(mongoDatabase)
 
-    val createPostAction = CreatePostAction(CreatePostHandler(MongoPostRepository))
+    val createPostAction = CreatePostAction(CreatePostHandler(mongoPostRepository))
 
     // val updateUserAction = UpdateUserAction(UpdateUserHandler(userMongoUserRepository))
-    val findUserByIdAction = FindPostByIdAction(FindPostByIdHandler(MongoPostRepository))
+    val findPostByIdAction = FindPostByIdAction(FindPostByIdHandler(mongoPostRepository))
 
 
     routing {
@@ -43,7 +46,7 @@ fun Application.postRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
 
         get("/posts") {
             // Extraer parámetros de búsqueda desde la query
-            val userId = call.request.queryParameters["user_id"]?.toIntOrNull()
+            val userId = call.request.queryParameters["user_id"]
             val order = call.request.queryParameters["order"] ?: "DESC" // Valor por defecto DESC
             val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 10 // Valor por defecto 10
             val offset = call.request.queryParameters["offset"]?.toIntOrNull() ?: 0 // Valor por defecto 0
@@ -61,8 +64,7 @@ fun Application.postRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
                 if (order.uppercase() !in listOf("ASC", "DESC")) throw IllegalArgumentException("El orden debe ser 'ASC' o 'DESC'")
 
                 // Obtener posts desde el servicio
-                val query =
-                val posts = CreatePostAction(userId, order.uppercase(), limit, offset)
+                val posts = findPostByIdAction.execute(FindPostByIdQuery(userId.toString(), order.uppercase(), limit, offset))
 
                 // Responder con los posts obtenidos
                 call.respond(HttpStatusCode.OK, posts)

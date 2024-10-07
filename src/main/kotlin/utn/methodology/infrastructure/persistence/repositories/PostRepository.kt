@@ -7,7 +7,7 @@ import org.bson.Document
 import utn.methodology.domain.entities.Post
 
 
-class PostRepository (val database: MongoDatabase) {
+class PostRepository(val database: MongoDatabase) {
 
     private var colección: MongoCollection<Document> = database.getCollection("posts") as MongoCollection<Document>
 
@@ -23,21 +23,11 @@ class PostRepository (val database: MongoDatabase) {
         }
     }
 
-    fun deletePost(postId: Int): Boolean {  // ABI: FUNCION DELETE CORREGIDA?
-        val filter = Document("_id", postId)  // Usa directamente el postId en lugar de Post.getId()
-
-        val result = colección.deleteOne(filter)  // Intenta eliminar el documento con ese ID
-
-        // Comprueba si se eliminó un documento y devuelve true si fue exitoso
+    fun deletePost(postId: Int): Boolean {
+        val filter = Document("_id", postId)
+        val result = colección.deleteOne(filter)
         return result.deletedCount > 0
     }
-
-    // FUNCION ANTERIOR A DELETEPOST:
-    // fun delete(post: Post) {
-    //        val filter = Document("_id", post.getId());
-    //
-    //        colección.deleteOne(filter)
-    //    }
 
     fun ListAll(): List<Post> {
         val primitives = colección.find().map { it as Document }.toList()
@@ -46,32 +36,49 @@ class PostRepository (val database: MongoDatabase) {
 
     fun findOne(id: Int): Post? {
         val filter = Document("_id", id)
-
         val primitives = colección.find(filter).firstOrNull()
-
-        if (primitives == null) {
-            return null
-        }
-
-        return Post.fromPrimitives(primitives as Map<String, String>)
+        return primitives?.let { Post.fromPrimitives(it.toMap() as Map<String, String>) }
     }
+
     fun findAll(): List<Post> {
-
-        val primitives = colección.find().map { it as Document }.toList();
-
+        val primitives = colección.find().map { it as Document }.toList()
         return primitives.map {
             Post.fromPrimitives(it.toMap() as Map<String, String>)
         }
     }
 
-
     fun findPostsByFollowing(followingUserIds: List<String>): List<Post> {
         val filter = Document("userId", Document("\$in", followingUserIds))
-        return colección.find(filter)                               // funcion abi para encontrar posts
-            //.sort(descending(Post::createdAt))   SORT COMENTADO: VER SI FUNCIONA O NO
+        return colección.find(filter)
             .toList()
             .map { Post.fromPrimitives(it.toMap() as Map<String, String>) }
     }
 
+    // Nueva función con filtros de usuario, orden, límite y offset
+    fun findPostsByUserWithFilters(
+        userId: String,
+        order: String = "DESC",    // Por defecto DESC
+        limit: Int? = null,        // Sin límite por defecto
+        offset: Int? = null        // Sin offset por defecto
+    ): List<Post> {
+        val filter = Document("userId", userId)
+        val sortOrder = if (order == "ASC") 1 else -1
 
+        var query = colección.find(filter)
+
+        if (offset != null) {
+            query = query.skip(offset)
+        }
+        if (limit != null) {
+            query = query.limit(limit)
+        }
+
+        query = query.sort(Document("createdAt", sortOrder))
+
+        val primitives = query.toList()
+        return primitives.map {
+            Post.fromPrimitives(it.toMap() as Map<String, String>)
+        }
+    }
 }
+

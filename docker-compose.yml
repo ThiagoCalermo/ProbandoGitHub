@@ -7,7 +7,7 @@ services:
       - ./.docker/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
       - ./data/mongo:/data/db
     environment:
-      MONGO_INITDB_DATABASE: grupo13db
+      MONGO_INITDB_DATABASE: "grupo13db"
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     ports:

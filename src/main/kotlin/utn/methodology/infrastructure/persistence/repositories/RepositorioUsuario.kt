@@ -30,7 +30,7 @@ class RepositorioUsuario (private val database: MongoDatabase) {
             val filtrar = Document("uuid", uuid)
 
 
-            val primitives = this.colección.find(filtrar).firstOrNull()
+            val primitives = colección.find(filtrar).firstOrNull();
 
 
             usuario = Usuario.fromPrimitives(primitives as Map<String, String>)
@@ -40,7 +40,7 @@ class RepositorioUsuario (private val database: MongoDatabase) {
 
     fun recuperarTodos(): List<Usuario> {
         val primitives = colección.find().map { it as Document }.toList()
-        return primitives.map { Usuario.fromPrimitives(it.toMap() as Map<String, String>) }
+        return primitives.map { Usuario.fromPrimitives(primitives as Map<String, String>) }
     }
 
     fun existenciaporUsername(UserName: String): Boolean {

@@ -7,14 +7,29 @@ import utn.methodology.infrastructure.persistence.repositories.PostRepository
 
 class DeletePostHandler (private val postRepository: PostRepository) {
 
-    fun handle(command: DeletePostCommand) {
+    fun handle(command: DeletePostCommand): String {
 
-        val user = PostRepository.findOne(command.id)
+        if(command.id.isEmpty()){
+            return "enter id"
+        }
 
-        if (user == null) {
+        val post = postRepository.findOne(command.id.toInt())
+
+        if (post == null) {
             throw NotFoundException("not found user with id: ${command.id}")
         }
 
-        PostRepository.delete(user);
+
+        try {
+            val result = postRepository.deletePost(command.id.toInt());
+            if(result){
+                return "deletion success"
+            }else{
+                return "eliminate post error"
+            }
+        } catch(ex: Exception) {
+            ex.printStackTrace()
+            return "eliminate post error"
+        }
     }
 }

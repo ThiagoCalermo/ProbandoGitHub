@@ -43,14 +43,14 @@ class Usuario(
     }
 
 
-    fun getSeguidos(): List<String> {
+    /*fun getSeguidos(): List<String> {
         return seguidos
     }
 
 
     fun getSeguidores(): List<String> {
         return seguidores
-    }
+    }*/
 
 
     fun update(name: String, userName: String, email: String, password: String){

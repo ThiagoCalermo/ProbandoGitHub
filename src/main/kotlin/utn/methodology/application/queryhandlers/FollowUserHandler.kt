@@ -1,6 +1,7 @@
 package utn.methodology.application.queryhandlers
 
 
+import utn.methodology.domain.entities.Usuario
 import utn.methodology.infrastructure.http.actions.FollowUserAction
 import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
 
@@ -25,7 +26,7 @@ class FollowUserHandler(private val userRepository: RepositorioUsuario) {
 
 
         // Check if user is already following
-        if (currentUser.getSeguidos().contains(userToFollow.getId())) {
+        if (currentUser.seguidos.contains(userToFollow.getId())) {
             // Unfollow the user
             unfollowUser(currentUser, userToFollow)
         } else {
@@ -39,8 +40,8 @@ class FollowUserHandler(private val userRepository: RepositorioUsuario) {
     // followUserHandler.handle(followAction)
    
     private fun followUser(currentUser: Usuario, userToFollow: Usuario) {
-        currentUser.agregarSeguido(userToFollow.id)
-        userToFollow.agregarSeguidor(currentUser.id)
+        currentUser.agregarSeguido(userToFollow.getId())
+        userToFollow.agregarSeguido(currentUser.getId())
         userRepository.guardarOActualizar(currentUser)
         userRepository.guardarOActualizar(userToFollow)
 
@@ -50,8 +51,8 @@ class FollowUserHandler(private val userRepository: RepositorioUsuario) {
 
 
     private fun unfollowUser(currentUser: Usuario, userToFollow: Usuario) {
-        currentUser.quitarSeguido(userToFollow.id)
-        userToFollow.quitarSeguidor(currentUser.id)
+        currentUser.quitarSeguido(userToFollow.getId())
+        userToFollow.quitarSeguido(currentUser.getId())
         userRepository.guardarOActualizar(currentUser)
         userRepository.guardarOActualizar(userToFollow)
     }

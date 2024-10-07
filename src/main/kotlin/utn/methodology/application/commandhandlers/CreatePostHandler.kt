@@ -7,7 +7,7 @@ import java.util.UUID
 
 class CreatePostHandler(private val postRepository: PostRepository) {
 
-    fun handle(command: CreatePostCommand): Post {
+    fun handle(command: CreatePostCommand): String {
         // Validación de longitud del mensaje
         if (command.message.length > 280) {
             throw IllegalArgumentException("El mensaje no puede exceder los 280 caracteres")
@@ -15,6 +15,12 @@ class CreatePostHandler(private val postRepository: PostRepository) {
 
         // Creación del post
         val post = Post(userId = command.userId, message = command.message)
-        return postRepository.save(post)
+
+        return try {
+            postRepository.guardaroActualizar(post)
+            return "post creado exitosamente"
+        } catch (e: Exception) {
+            "Error al crear el post: ${e.message}"
+        }
     }
 }
