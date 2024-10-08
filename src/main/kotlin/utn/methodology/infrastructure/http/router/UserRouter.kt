@@ -36,13 +36,12 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
             val body = call.receive<CreateUserCommand>()
 
             try {
+                println("body $body")
                 createUserAction.execute(body);
                 call.respond(HttpStatusCode.Created, mapOf("message" to "User created successfully"))
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError, "Error creating user")
             }
-
-            call.respond(HttpStatusCode.Created, mapOf("message" to "ok"))
         }
         get("/users/{userName}"){
             val username = call.request.queryParameters["username"]
