@@ -9,7 +9,11 @@ import utn.methodology.domain.entities.Post
 
 class PostRepository(val database: MongoDatabase) {
 
-    private var colección: MongoCollection<Document> = database.getCollection("posts") as MongoCollection<Document>
+    private var colección: MongoCollection<Document>
+
+    init {
+        colección = database.getCollection("posts") as MongoCollection<Document>
+    }
 
     fun guardaroActualizar(post: Post) {
         try {
