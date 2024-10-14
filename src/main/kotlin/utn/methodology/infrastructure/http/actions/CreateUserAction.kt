@@ -9,7 +9,7 @@ class CreateUserAction(
 
     fun execute(body: CreateUserCommand) {
         if (body.userName.isBlank() || body.email.isBlank() || body.password.isBlank()) {
-            throw IllegalArgumentException("Invalid Data")
+            throw IllegalArgumentException("Datos no válidos")
         }
         body.validate().let {
             handler.handle(it)

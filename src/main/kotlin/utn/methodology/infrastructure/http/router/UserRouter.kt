@@ -38,16 +38,16 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
             try {
                 println("body $body")
                 createUserAction.execute(body);
-                call.respond(HttpStatusCode.Created, mapOf("message" to "User created successfully"))
+                call.respond(HttpStatusCode.Created, mapOf("message" to "Usuario creado con éxito"))
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, "Error creating user")
+                call.respond(HttpStatusCode.InternalServerError, "Error al crear usuario")
             }
         }
         get("/users/{userName}"){
             val username = call.request.queryParameters["username"]
 
             if (username.isNullOrBlank()) {
-                call.respond(HttpStatusCode.BadRequest, "Enter username")
+                call.respond(HttpStatusCode.BadRequest, "ingresar username")
                 return@get
             }
 
@@ -59,7 +59,7 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
                 if (!result.isEmpty()) {
                     call.respond(HttpStatusCode.OK, result)
                 } else {
-                    call.respond(HttpStatusCode.NotFound, "User not found")
+                    call.respond(HttpStatusCode.NotFound, "Usuario no encontrado")
                 }
             } catch (error: Exception) {
                 call.respond(HttpStatusCode.InternalServerError, "Error")
@@ -69,7 +69,7 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
             val id = call.request.queryParameters["id"]
 
             if (id.isNullOrBlank()) {
-                call.respond(HttpStatusCode.BadRequest, "Enter id")
+                call.respond(HttpStatusCode.BadRequest, "Ingresar id")
                 return@get
             }
 
@@ -81,7 +81,7 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
                 if (!result.isEmpty()) {
                     call.respond(HttpStatusCode.OK, result)
                 } else {
-                    call.respond(HttpStatusCode.NotFound, "User not found")
+                    call.respond(HttpStatusCode.NotFound, "Usuario no encontrado")
                 }
             } catch (error: Exception) {
                 call.respond(HttpStatusCode.InternalServerError, "Error")

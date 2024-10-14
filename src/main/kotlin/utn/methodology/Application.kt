@@ -26,7 +26,7 @@ fun Application.errorHandler() {
             if (cause is NotFoundException) {
                 call.respond(HttpStatusCode.NotFound, mapOf("error" to cause.message))
             } else {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Internal server error"))
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error interno del servidor"))
             }
 
         }
