@@ -12,20 +12,17 @@ class FollowUserHandler(private val userRepository: RepositorioUsuario) {
         val userToFollow = userRepository.RecuperarPorId(action.userToFollowId)
 
 
-        // Validate input (e.g., check if users exist, prevent self-following)
         if (currentUser == null || userToFollow == null) {
-            // Handle error: user not found
+            println("Usuario no encontrado.")
             return
         }
-
 
         if (currentUser.getId() == userToFollow.getId()) {
-            // Handle error: self-following not allowed
+            println("Self-following not allowed.")
             return
         }
 
-
-        // Check if user is already following
+        // Check user already following
         if (currentUser.seguidos.contains(userToFollow.getId())) {
             // Unfollow the user
             unfollowUser(currentUser, userToFollow)
@@ -34,19 +31,12 @@ class FollowUserHandler(private val userRepository: RepositorioUsuario) {
             followUser(currentUser, userToFollow)
         }
     }
-    // Uso:
-    //val followAction = FollowUserAction("user123", "user456")
-    // val followUserHandler = FollowUserHandler(userRepository)
-    // followUserHandler.handle(followAction)
-   
+
     private fun followUser(currentUser: Usuario, userToFollow: Usuario) {
         currentUser.agregarSeguido(userToFollow.getId())
         userToFollow.agregarSeguido(currentUser.getId())
         userRepository.guardarOActualizar(currentUser)
         userRepository.guardarOActualizar(userToFollow)
-
-
-        // Send notifications, update user feeds, etc. (optional)
     }
 
 
@@ -56,6 +46,8 @@ class FollowUserHandler(private val userRepository: RepositorioUsuario) {
         userRepository.guardarOActualizar(currentUser)
         userRepository.guardarOActualizar(userToFollow)
     }
-
-
+    // Uso:
+    //val followAction = FollowUserAction("user123", "user456")
+    // val followUserHandler = FollowUserHandler(userRepository)
+    // followUserHandler.handle(followAction)
 }
