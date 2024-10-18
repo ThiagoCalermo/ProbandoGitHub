@@ -1,6 +1,6 @@
 db.createUser({
-  user: "tet",
-  password: "test",
+  user: "local",
+  password: "secret",
   roles: [
     {
       role: "readWrite",
