@@ -43,7 +43,7 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
                 call.respond(HttpStatusCode.InternalServerError, "Error al crear usuario")
             }
         }
-        get("/users/{userName}"){
+        get("/users"){
             val username = call.request.queryParameters["username"]
 
             if (username.isNullOrBlank()) {
@@ -65,7 +65,7 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
                 call.respond(HttpStatusCode.InternalServerError, "Error")
             }
         }
-        get("/users/{id}") {
+        get("/users") {
             val id = call.request.queryParameters["id"]
 
             if (id.isNullOrBlank()) {
