@@ -15,6 +15,7 @@ import utn.methodology.application.queries.FindPostByIdQuery
 import utn.methodology.application.queryhandlers.FindPostByIdHandler
 import utn.methodology.infrastructure.http.actions.FindPostByIdAction
 import utn.methodology.infrastructure.persistence.repositories.PostRepository
+import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
 
 
 private fun Any.execute(query: DeletePostCommand) {
@@ -25,8 +26,9 @@ fun Application.postRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
     val mongoDatabase = connectToMongoDB()      // Action y CreateUserHandler ya creados
 
     val mongoPostRepository = PostRepository(mongoDatabase)
+    val userMongoRepository = RepositorioUsuario(mongoDatabase)
 
-    val createPostAction = CreatePostAction(CreatePostHandler(mongoPostRepository))
+    val createPostAction = CreatePostAction(CreatePostHandler(mongoPostRepository,userMongoRepository))
 
     // val updateUserAction = UpdateUserAction(UpdateUserHandler(userMongoUserRepository))
     val findPostByIdAction = FindPostByIdAction(FindPostByIdHandler(mongoPostRepository))

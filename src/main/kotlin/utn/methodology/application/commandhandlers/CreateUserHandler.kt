@@ -2,7 +2,8 @@ package utn.methodology.application.commandhandlers
 
 import utn.methodology.application.commands.CreateUserCommand
 import utn.methodology.domain.entities.Usuario
-import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
+//import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
+import utn.methodology.domain.contracts.repositoriousuario
 //import utn.methodology.infrastructure.persistence.MongoUserRepository
 import java.util.UUID
 
@@ -12,7 +13,7 @@ import java.util.UUID
 //        this.email = email
 //        this.password = password
 class CreateUserHandler(
-    private val usuarioRepositorio : RepositorioUsuario
+    private val usuarioRepositorio : repositoriousuario
 ) {
     fun handle(command: CreateUserCommand):String {
         if (command.userName.isBlank() || command.email.isBlank()) {

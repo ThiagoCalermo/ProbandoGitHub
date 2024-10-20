@@ -37,6 +37,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-config-yaml")
     testImplementation("io.ktor:ktor-server-test-host-jvm")
+    testImplementation("io.github.serpro69:kotlin-faker:1.16.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
 

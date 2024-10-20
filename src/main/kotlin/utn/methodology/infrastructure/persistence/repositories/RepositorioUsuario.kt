@@ -6,8 +6,9 @@ import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.UpdateOptions
 import org.bson.Document
 import utn.methodology.domain.entities.Usuario
+import  utn.methodology.domain.contracts.repositoriousuario
 
-class RepositorioUsuario (private val database: MongoDatabase) {
+class RepositorioUsuario (private val database: MongoDatabase) : repositoriousuario{
 
      private var colección: MongoCollection<Document>
 
@@ -15,7 +16,7 @@ class RepositorioUsuario (private val database: MongoDatabase) {
         colección = database.getCollection("usuarios") as MongoCollection<Document>
     }
 
-    fun guardarOActualizar(usuario: Usuario) {
+   override fun guardarOActualizar(usuario: Usuario) {
         val opcion = UpdateOptions().upsert(true)
         val filtrar = Document("uuid", usuario.getId())
         val actualizar = Document("\$set", usuario.toPrimitives())
@@ -23,8 +24,12 @@ class RepositorioUsuario (private val database: MongoDatabase) {
             .append("seguidores", usuario.seguidores)   // la clase Document, forma adecuada de agregar
         colección.updateOne(filtrar, actualizar, opcion) // campos en MongoDB con Kotlin.
     }
+    override fun delete (usuario:Usuario) {
+        val filtrar = Document("uuid", usuario.getId());
+        colección.deleteOne(filtrar)
+    }
 
-    fun RecuperarPorId (uuid: String): Usuario? {
+    override fun RecuperarPorId (uuid: String): Usuario? {
         var usuario: Usuario? = null
         try {
             val filtrar = Document("uuid", uuid)
@@ -62,7 +67,7 @@ class RepositorioUsuario (private val database: MongoDatabase) {
         return colección.find(filtrar).firstOrNull() != null
     }
 
-    fun existenciaporEmail(email: String): Boolean {
+   override fun existenciaporEmail(email: String): Boolean {
         val filtrar = Document("email", email)
         return colección.find(filtrar).firstOrNull() != null
     }

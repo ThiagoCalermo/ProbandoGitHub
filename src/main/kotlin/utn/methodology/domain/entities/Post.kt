@@ -3,7 +3,7 @@ package utn.methodology.domain.entities
 import java.time.LocalDateTime
 
 class Post(
-    var id: Int? = null,    // El id se genera automáticamente al persistir
+    var id: Int?=null,    // El id se genera automáticamente al persistir
     var userId: String,
     var message: String,
     var createdAt: String = LocalDateTime.now().toString()
@@ -21,11 +21,12 @@ class Post(
 
     }
 
-    /*fun getId(): Int? {
+    fun getId(): Int? {
         return this.id
-    }*/
+    }
 
-    fun update(id: Int?, userId: String, message: String, createdAt: String){
+
+    fun update(id: Int, userId: String, message: String, createdAt: String){
         this.id = id
         this.userId = userId
         this.message = message
@@ -39,6 +40,9 @@ class Post(
             "createdAt" to this.createdAt
         )
     }
+    fun GetUserId(): String{ return  this.userId}
+    fun getMessage(): String{return  this.message}
+    fun getCreatedAt() : String{return  this.createdAt}
 }
 
 

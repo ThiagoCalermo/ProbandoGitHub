@@ -2,10 +2,12 @@ package utn.methodology.application.commandhandlers
 
 import utn.methodology.application.commands.CreatePostCommand
 import utn.methodology.domain.entities.Post
-import utn.methodology.infrastructure.persistence.repositories.PostRepository
+import  utn.methodology.domain.contracts.postrepository
+import  utn.methodology.domain.contracts.repositoriousuario
+//import utn.methodology.infrastructure.persistence.repositories.PostRepository
 import java.util.UUID
 
-class CreatePostHandler(private val postRepository: PostRepository) {
+class CreatePostHandler(private val postRepository: postrepository, private val userRepository: repositoriousuario) {
 
     fun handle(command: CreatePostCommand): String {
         // Validación de longitud del mensaje

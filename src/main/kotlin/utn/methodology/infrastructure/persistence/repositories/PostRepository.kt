@@ -5,9 +5,10 @@ import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.UpdateOptions
 import org.bson.Document
 import utn.methodology.domain.entities.Post
+import utn.methodology.domain.contracts.postrepository
 
 
-class PostRepository(val database: MongoDatabase) {
+class PostRepository(val database: MongoDatabase) : postrepository {
 
     private var colección: MongoCollection<Document>
 
@@ -15,7 +16,7 @@ class PostRepository(val database: MongoDatabase) {
         colección = database.getCollection("posts") as MongoCollection<Document>
     }
 
-    fun guardaroActualizar(post: Post) {
+    override fun guardaroActualizar(post: Post) {
         try {
             val opcion = UpdateOptions().upsert(true) // Permite insertar o actualizar
             val filtrar = Document("id", post.id)     // Filtro basado en el ID del post
@@ -51,13 +52,21 @@ class PostRepository(val database: MongoDatabase) {
         }
     }
 
-    fun findPostsByFollowing(followingUserIds: List<String>): List<Post> {
+    override fun findPostsByFollowing(followingUserIds: List<String>): List<Post> {
         val filter = Document("userId", Document("\$in", followingUserIds))
         return colección.find(filter)
             .toList()
             .map { Post.fromPrimitives(it.toMap() as Map<String, String>) }
     }
 
+    override fun findByOwnerId(userId: String): List<Post> {
+        val filter = Document("userId", userId);
+
+        val primitives = colección.find(filter)
+            .sort(Document("createdAt", 1)).toList()
+
+        return primitives.map { Post.fromPrimitives(it as Map<String,String>) }
+    }
     // Nueva función con filtros de usuario, orden, límite y offset
     fun findPostsByUserWithFilters(
         userId: String,

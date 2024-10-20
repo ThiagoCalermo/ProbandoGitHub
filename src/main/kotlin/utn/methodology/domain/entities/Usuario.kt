@@ -28,6 +28,14 @@ class Usuario(
             return usuario
         }
     }
+    // Método getter para acceder a la propiedad password
+   // fun getPassword(): String {
+       // return this.password
+    //}
+    fun getUsername(): String {
+        return this.userName
+    }
+
     fun getId(): String {
         return this.uuid
     }
@@ -51,13 +59,19 @@ class Usuario(
     fun getSeguidores(): List<String> {
         return seguidores
     }*/
+fun getEmail (): String{
+    return this.email
+}
+    fun getPassword (): String { return this.password}
+    fun getName ():String {return  this.name}
 
-
-    fun update(name: String, userName: String, email: String, password: String){
+    fun update(name: String, userName: String, email: String, password: String, seguidos: List<String>, seguidores: List<String>){
         this.name = name
         this.userName = userName
         this.email = email
         this.password = password
+        this.seguidos = seguidos
+        this.seguidores = seguidores
     }
 
 
@@ -67,7 +81,9 @@ class Usuario(
             "name" to this.name,
             "userName" to this.userName,
             "email" to this.email,
-            "password" to this.password
+            "password" to this.password,
+            "seguidos" to this.seguidos.toString(),
+            "seguidores" to this.seguidores.toString()
         )
     }
 }
