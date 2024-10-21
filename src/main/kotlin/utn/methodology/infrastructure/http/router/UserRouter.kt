@@ -9,12 +9,15 @@ import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import utn.methodology.application.commandhandlers.CreateUserHandler
 import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
 import utn.methodology.application.queries.FindUserByIdQuery
 import utn.methodology.application.queries.FindUserByUsernameQuery
 import utn.methodology.application.queryhandlers.FindUserByIdHandler
 import utn.methodology.application.queryhandlers.FindUserByUsernameHandler
+import utn.methodology.domain.entities.Usuario
 import utn.methodology.infrastructure.http.actions.FindUserByIdAction
 import utn.methodology.infrastructure.http.actions.FindUserByUsernameAction
 
@@ -43,8 +46,9 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
                 call.respond(HttpStatusCode.InternalServerError, "Error al crear usuario")
             }
         }
-        get("/users"){
-            val username = call.request.queryParameters["username"]
+
+        get("/users/{username}"){
+            val username = call.parameters["username"]
 
             if (username.isNullOrBlank()) {
                 call.respond(HttpStatusCode.BadRequest, "ingresar username")
@@ -56,17 +60,22 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
 
             try {
                 val result = findUserByUsernameAction.execute(query)
-                if (!result.isEmpty()) {
-                    call.respond(HttpStatusCode.OK, result)
+                println("salio de buscar en try $result")
+                if (result.isNotEmpty()) {
+                    println("envia la res")
+                    val jsonResponse = Json.encodeToString(Usuario.fromPrimitives(result))
+                    call.respond(HttpStatusCode.OK, jsonResponse)
                 } else {
                     call.respond(HttpStatusCode.NotFound, "Usuario no encontrado")
                 }
             } catch (error: Exception) {
+                println("da error sacando la respuesta")
                 call.respond(HttpStatusCode.InternalServerError, "Error")
             }
         }
-        get("/users") {
-            val id = call.request.queryParameters["id"]
+
+        get("/users/{id}") {
+            val id = call.parameters["id"]
 
             if (id.isNullOrBlank()) {
                 call.respond(HttpStatusCode.BadRequest, "Ingresar id")
@@ -79,7 +88,8 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
             try {
                 val result = findUserByIdAction.execute(query)
                 if (!result.isEmpty()) {
-                    call.respond(HttpStatusCode.OK, result)
+                    val jsonResponse = Json.encodeToString(Usuario.fromPrimitives(result))
+                    call.respond(HttpStatusCode.OK, jsonResponse)
                 } else {
                     call.respond(HttpStatusCode.NotFound, "Usuario no encontrado")
                 }
@@ -88,11 +98,11 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
             }
         }
 
-//        get("/users") {
-//            val users = userMongoUserRepository.findAll();
-//
-//            call.respond(HttpStatusCode.OK, users.map { it.toPrimitives() })
-//        }
+        get("/users") {
+            val users = userMongoUserRepository.recuperarTodos();
+
+            call.respond(HttpStatusCode.OK, Json.encodeToString(users))
+        }
 
 
     }

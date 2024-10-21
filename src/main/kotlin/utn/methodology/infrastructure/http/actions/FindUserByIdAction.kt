@@ -8,7 +8,7 @@ class FindUserByIdAction(
     private val handler: FindUserByIdHandler
 ) {
 
-    fun execute(query: FindUserByIdQuery): Map<String, String> {
+    fun execute(query: FindUserByIdQuery): Map<String, Any> {
         query
             .validate()
             .let {

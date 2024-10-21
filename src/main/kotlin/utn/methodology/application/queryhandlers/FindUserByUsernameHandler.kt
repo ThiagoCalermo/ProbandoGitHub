@@ -9,7 +9,7 @@ class FindUserByUsernameHandler(
     private val usuarioRepositorio: RepositorioUsuario
 ) {
 
-    fun handle(query: FindUserByUsernameQuery): Map<String, String> {
+    fun handle(query: FindUserByUsernameQuery): Map<String, Any> {
 
         val usuario = usuarioRepositorio.recuperarPorUserName(query.userName)
 

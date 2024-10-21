@@ -1,7 +1,9 @@
 package utn.methodology.domain.entities
 
+import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
+@Serializable
 class Post(
     var id: Int?=null,    // El id se genera automáticamente al persistir
     var userId: String,
@@ -21,9 +23,9 @@ class Post(
 
     }
 
-    fun getId(): Int? {
-        return this.id
-    }
+    //fun getId(): Int? {
+    //    return this.id
+    //}
 
 
     fun update(id: Int, userId: String, message: String, createdAt: String){
@@ -41,8 +43,8 @@ class Post(
         )
     }
     fun GetUserId(): String{ return  this.userId}
-    fun getMessage(): String{return  this.message}
-    fun getCreatedAt() : String{return  this.createdAt}
+    //fun getMessage(): String{return  this.message}
+    //fun getCreatedAt() : String{return  this.createdAt}
 }
 
 

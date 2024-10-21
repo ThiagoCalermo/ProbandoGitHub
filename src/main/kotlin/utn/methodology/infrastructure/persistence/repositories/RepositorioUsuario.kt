@@ -10,23 +10,20 @@ import  utn.methodology.domain.contracts.repositoriousuario
 
 class RepositorioUsuario (private val database: MongoDatabase) : repositoriousuario{
 
-     private var colección: MongoCollection<Document>
+    private val collection: MongoCollection<Any> = database.getCollection("users") as MongoCollection<Any>;
 
-    init {
-        colección = database.getCollection("usuarios") as MongoCollection<Document>
-    }
 
    override fun guardarOActualizar(usuario: Usuario) {
         val opcion = UpdateOptions().upsert(true)
         val filtrar = Document("uuid", usuario.getId())
         val actualizar = Document("\$set", usuario.toPrimitives())
-            .append("seguidos", usuario.seguidos)       // En lugar de usar put, usamos el método append de
-            .append("seguidores", usuario.seguidores)   // la clase Document, forma adecuada de agregar
-        colección.updateOne(filtrar, actualizar, opcion) // campos en MongoDB con Kotlin.
+
+        collection.updateOne(filtrar, actualizar, opcion) 
     }
+
     override fun delete (usuario:Usuario) {
         val filtrar = Document("uuid", usuario.getId());
-        colección.deleteOne(filtrar)
+        collection.deleteOne(filtrar)
     }
 
     override fun RecuperarPorId (uuid: String): Usuario? {
@@ -35,10 +32,10 @@ class RepositorioUsuario (private val database: MongoDatabase) : repositoriousua
             val filtrar = Document("uuid", uuid)
 
 
-            val primitives = colección.find(filtrar).firstOrNull();
+            val primitives = collection.find(filtrar).firstOrNull();
 
 
-            usuario = Usuario.fromPrimitives(primitives as Map<String, String>)
+            usuario = Usuario.fromPrimitives(primitives as Map<String, Any>)
         } catch (e: Exception){ println ("no se pudo encontrar el usuario con ese id: ${e.message} ")}
         return usuario
     }
@@ -49,27 +46,33 @@ class RepositorioUsuario (private val database: MongoDatabase) : repositoriousua
             val filtrar = Document("userName", userName)
 
 
-            val primitives = colección.find(filtrar).firstOrNull();
+            val primitives = collection.find(filtrar).firstOrNull();
+
+            println("primitive usuario $primitives")
 
 
-            usuario = Usuario.fromPrimitives(primitives as Map<String, String>)
+            usuario = Usuario.fromPrimitives(primitives as Map<String, Any>)
         } catch (e: Exception){ println ("no se pudo encontrar el usuario con ese id: ${e.message} ")}
         return usuario
     }
 
     fun recuperarTodos(): List<Usuario> {
-        val primitives = colección.find().map { it as Document }.toList()
-        return primitives.map { Usuario.fromPrimitives(primitives as Map<String, String>) }
+        println("andes d collection")
+        val primitives = collection.find().map { it as Document }.toList()
+        println("usuarios primitives $primitives")
+
+        // Cambiar 'primitives' por 'it' en la conversión
+        return primitives.map { Usuario.fromPrimitives(it as Map<String, Any>) }
     }
 
     fun existenciaporUsername(UserName: String): Boolean {
         val filtrar = Document("UserName", UserName)
-        return colección.find(filtrar).firstOrNull() != null
+        return collection.find(filtrar).firstOrNull() != null
     }
 
    override fun existenciaporEmail(email: String): Boolean {
         val filtrar = Document("email", email)
-        return colección.find(filtrar).firstOrNull() != null
+        return collection.find(filtrar).firstOrNull() != null
     }
 
     fun getFollowing(userId: String): List<String> {

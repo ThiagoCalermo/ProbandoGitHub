@@ -12,7 +12,7 @@ class FindUserByIdHandler(
 ) {
 
 
-    fun handle(query: FindUserByIdQuery): Map<String, String> {
+    fun handle(query: FindUserByIdQuery): Map<String, Any> {
 
 
         val usuario = usuarioRepositorio.RecuperarPorId(query.id)

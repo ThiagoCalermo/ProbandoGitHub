@@ -22,7 +22,7 @@ class FindUserByUsernameAction(
     private val handler: FindUserByUsernameHandler
 ) {
 
-    fun execute(query: FindUserByUsernameQuery): Map<String, String> {
+    fun execute(query: FindUserByUsernameQuery): Map<String, Any> {
         query
             .validate()
             .let {
