@@ -5,8 +5,8 @@ import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.UpdateOptions
 import org.bson.Document
+import utn.methodology.domain.contracts.repositoriousuario
 import utn.methodology.domain.entities.Usuario
-import  utn.methodology.domain.contracts.repositoriousuario
 
 class RepositorioUsuario (private val database: MongoDatabase) : repositoriousuario{
 
@@ -70,6 +70,11 @@ class RepositorioUsuario (private val database: MongoDatabase) : repositoriousua
         return collection.find(filtrar).firstOrNull() != null
     }
 
+    fun existsByUuid(id: String): Boolean {
+        val filtrar = Document("uuid", id)
+        return collection.find(filtrar).firstOrNull() != null
+    }
+
    override fun existenciaporEmail(email: String): Boolean {
         val filtrar = Document("email", email)
         return collection.find(filtrar).firstOrNull() != null
@@ -80,4 +85,11 @@ class RepositorioUsuario (private val database: MongoDatabase) : repositoriousua
         return usuario.seguidos
     }       // codigo Abi: metodo getFollowing para FollowRouter. (hice "seguidos" publico)
 
+    fun update(usuario: Usuario) {
+        val opcion = UpdateOptions().upsert(false)
+        val filtrar = Document("uuid", usuario.getId())
+        val actualizar = Document("\$set", usuario.toPrimitives())
+
+        collection.updateOne(filtrar, actualizar, opcion)
+    }
 }

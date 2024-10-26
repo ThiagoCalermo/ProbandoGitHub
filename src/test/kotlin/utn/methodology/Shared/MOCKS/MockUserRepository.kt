@@ -1,5 +1,4 @@
 package utn.methodology.Shared.MOCKS
-import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
 import utn.methodology.domain.contracts.repositoriousuario
 import utn.methodology.domain.entities.Usuario
 
@@ -21,14 +20,14 @@ class MockUserRepository : repositoriousuario {
         users = users.filter { it.getId() != usuario.getId() }.toTypedArray()
     }
     override fun existenciaporEmail(email: String): Boolean {
-        return users.any { it.getEmail() == email }
+        return users.any { it.email == email }
     }
     fun clean() {
         users = emptyArray();
     }
 
     fun findByUsername(username: String): Usuario? {
-       return users.find { it.getUsername() == username }
+       return users.find { it.userName == username }
    }
 
 }

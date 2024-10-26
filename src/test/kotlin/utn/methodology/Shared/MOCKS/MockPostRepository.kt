@@ -6,7 +6,7 @@ class MockPostRepository : postrepository {
     private var posts: Array<Post> = emptyArray()
 
     override fun guardaroActualizar(post: Post) {
-        this.posts = this.posts.filter { it.getId() != post.getId() }.toTypedArray()
+        this.posts = this.posts.filter { it.GetUserId() != post.GetUserId() }.toTypedArray()
         this.posts = this.posts.plus(post)
     }
 

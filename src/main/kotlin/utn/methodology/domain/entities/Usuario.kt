@@ -47,6 +47,13 @@ class Usuario(
         seguidos += usuarioASeguirId
     }
 
+    fun agregarSeguidor(seguidorId: String) {
+        seguidores += seguidorId
+    }
+
+    fun quitarSeguidor(seguidorId: String) {
+        seguidores = seguidores.filterNot { it == seguidorId }
+    }
 
     fun quitarSeguido(usuarioASeguirId: String) {
         seguidos = seguidos.filterNot { it == usuarioASeguirId }
