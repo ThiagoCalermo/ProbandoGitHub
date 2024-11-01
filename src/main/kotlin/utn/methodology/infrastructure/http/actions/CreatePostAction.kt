@@ -15,6 +15,3 @@ class CreatePostAction(
 
     }
 }
-
-// Estructura de la request que viene en el body
-data class CreatePostRequest(val userId: Int, val message: String)

@@ -9,6 +9,7 @@ data class CreatePostCommand(
 
 ) {
     fun validate(): CreatePostCommand {
+        checkNotNull(userId) { throw IllegalArgumentException("Debe definir un id de usuario") }
         if (message.length > 280) {
             throw IllegalArgumentException("El mensaje no puede superar los 280 caracteres.")
         }

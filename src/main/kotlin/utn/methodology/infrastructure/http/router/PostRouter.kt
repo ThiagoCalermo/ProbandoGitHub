@@ -1,19 +1,21 @@
 package utn.methodology.infrastructure.http.router
 
-import utn.methodology.infrastructure.http.actions.DeletePostAction
-import utn.methodology.application.commands.CreatePostCommand
-import utn.methodology.infrastructure.http.actions.CreatePostAction
-import utn.methodology.infrastructure.persistence.connectToMongoDB
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import utn.methodology.application.commandhandlers.CreatePostHandler
+import utn.methodology.application.commands.CreatePostCommand
 import utn.methodology.application.commands.DeletePostCommand
 import utn.methodology.application.queries.FindPostByIdQuery
 import utn.methodology.application.queryhandlers.FindPostByIdHandler
+import utn.methodology.infrastructure.http.actions.CreatePostAction
+import utn.methodology.infrastructure.http.actions.DeletePostAction
 import utn.methodology.infrastructure.http.actions.FindPostByIdAction
+import utn.methodology.infrastructure.persistence.connectToMongoDB
 import utn.methodology.infrastructure.persistence.repositories.PostRepository
 import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
 
@@ -31,7 +33,7 @@ fun Application.postRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
     val createPostAction = CreatePostAction(CreatePostHandler(mongoPostRepository,userMongoRepository))
 
     // val updateUserAction = UpdateUserAction(UpdateUserHandler(userMongoUserRepository))
-    val findPostByIdAction = FindPostByIdAction(FindPostByIdHandler(mongoPostRepository))
+    val findPostByIdAction = FindPostByIdAction(FindPostByIdHandler(mongoPostRepository, userMongoRepository))
 
 
     routing {
@@ -68,11 +70,16 @@ fun Application.postRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
                 // Obtener posts desde el servicio
                 val posts = findPostByIdAction.execute(FindPostByIdQuery(userId.toString(), order.uppercase(), limit, offset))
 
+                println("sale de obtener los posts")
+                println("los posts son $posts")
+                println("esta vacio " + posts.isEmpty())
                 // Responder con los posts obtenidos
-                call.respond(HttpStatusCode.OK, posts)
+                call.respond(HttpStatusCode.OK, Json.encodeToString(posts))
             } catch (e: IllegalArgumentException) {
+                println("error de obtener los posts")
                 call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
             } catch (e: Exception) {
+                println("exeption  de obtener los posts")
                 call.respond(HttpStatusCode.InternalServerError, "Ocurrió un error inesperado")
             }
         }

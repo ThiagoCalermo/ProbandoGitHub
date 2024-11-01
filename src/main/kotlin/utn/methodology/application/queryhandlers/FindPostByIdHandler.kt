@@ -2,13 +2,18 @@ package utn.methodology.application.queryhandlers
 
 import io.ktor.server.plugins.*
 import utn.methodology.application.queries.FindPostByIdQuery
-import utn.methodology.application.queries.FindUserByIdQuery
 import utn.methodology.infrastructure.persistence.repositories.PostRepository
+import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
 
 class FindPostByIdHandler(
-    private val postRepository: PostRepository
+    private val postRepository: PostRepository,
+    private val repositoriousuario : RepositorioUsuario
 ) {
     fun handle(query: FindPostByIdQuery): List<Map<String, String>> {
+
+        if (!repositoriousuario.existsByUuid(query.id)) {
+            return emptyList()
+        }
         // Busca los posts del usuario con los filtros proporcionados
         val posts = postRepository.findPostsByUserWithFilters(
             query.id,      // ID del usuario para filtrar los posts
