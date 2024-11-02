@@ -1,6 +1,7 @@
 package utn.methodology.Shared.MOCKS
 import utn.methodology.domain.contracts.repositoriousuario
 import utn.methodology.domain.entities.Usuario
+//import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
 
 
 class MockUserRepository : repositoriousuario {
