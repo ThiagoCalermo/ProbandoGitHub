@@ -4,6 +4,8 @@ package utn.methodology.infrastructure.persistence.repositories
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.UpdateOptions
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.bson.Document
 import utn.methodology.domain.contracts.repositoriousuario
 import utn.methodology.domain.entities.Usuario
@@ -57,9 +59,7 @@ class RepositorioUsuario (private val database: MongoDatabase) : repositoriousua
     }
 
     fun recuperarTodos(): List<Usuario> {
-        println("andes d collection")
         val primitives = collection.find().map { it as Document }.toList()
-        println("usuarios primitives $primitives")
 
         // Cambiar 'primitives' por 'it' en la conversión
         return primitives.map { Usuario.fromPrimitives(it as Map<String, Any>) }

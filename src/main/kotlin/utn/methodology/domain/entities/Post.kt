@@ -5,15 +5,15 @@ import java.time.LocalDateTime
 
 @Serializable
 class Post(
-    var id: Int?=null,    // El id se genera automáticamente al persistir
+    var id: String,    // El id se genera automáticamente al persistir
     var userId: String,
     var message: String,
     var createdAt: String = LocalDateTime.now().toString()
 ) {
     companion object {
-        fun fromPrimitives(primitives: Map<String, String>): Post {
+        fun fromPrimitives(primitives: Map<String, Any>): Post {
             val post = Post(
-                primitives["id"] as Int?,
+                primitives["id"] as String,
                 primitives["userId"] as String,
                 primitives["message"] as String,
                 primitives["createdAt"] as String
@@ -28,13 +28,13 @@ class Post(
     //}
 
 
-    fun update(id: Int, userId: String, message: String, createdAt: String){
+    fun update(id: String, userId: String, message: String, createdAt: String){
         this.id = id
         this.userId = userId
         this.message = message
         this.createdAt = createdAt
     }
-    fun toPrimitives(): Map<String, String> {
+    fun toPrimitives(): Map<String, Any> {
         return mapOf(
             "id" to this.id.toString(),
             "userId" to this.userId,

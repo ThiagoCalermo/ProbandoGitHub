@@ -3,6 +3,8 @@ package utn.methodology.infrastructure.persistence.repositories
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.UpdateOptions
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.bson.Document
 import utn.methodology.domain.contracts.postrepository
 import utn.methodology.domain.entities.Post
@@ -85,10 +87,9 @@ class PostRepository(val database: MongoDatabase) : postrepository {
         query = query.sort(Document("createdAt", sortOrder))
 
         val primitives = query.toList()
-        println("llega antes de retornar posts")
-        println("primitives son $primitives")
+        //println("tomap " + Json.encodeToString(primitives.map { Post.fromPrimitives(it as Map<String, Any>)}))
         return primitives.map {
-            Post.fromPrimitives(it.toMap() as Map<String, String>)
+            Post.fromPrimitives(it as Map<String, Any>)
         }
     }
 }

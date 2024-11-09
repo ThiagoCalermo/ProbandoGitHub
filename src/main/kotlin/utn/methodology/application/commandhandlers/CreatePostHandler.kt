@@ -5,6 +5,7 @@ import utn.methodology.application.commands.CreatePostCommand
 import utn.methodology.domain.contracts.postrepository
 import utn.methodology.domain.entities.Post
 import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
+import java.util.*
 
 class CreatePostHandler(private val postRepository: postrepository, private val repositoriousuario : RepositorioUsuario) {
 
@@ -19,7 +20,7 @@ class CreatePostHandler(private val postRepository: postrepository, private val 
         }
 
         // Creación del post
-        val post = Post(userId = command.userId, message = command.message)
+        val post = Post(id = UUID.randomUUID().toString(), command.userId, message = command.message)
 
         return try {
             postRepository.guardaroActualizar(post)

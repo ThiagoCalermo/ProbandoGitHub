@@ -2,6 +2,7 @@ package utn.methodology.application.queryhandlers
 
 import io.ktor.server.plugins.*
 import utn.methodology.application.queries.FindPostByIdQuery
+import utn.methodology.domain.entities.Post
 import utn.methodology.infrastructure.persistence.repositories.PostRepository
 import utn.methodology.infrastructure.persistence.repositories.RepositorioUsuario
 
@@ -9,7 +10,7 @@ class FindPostByIdHandler(
     private val postRepository: PostRepository,
     private val repositoriousuario : RepositorioUsuario
 ) {
-    fun handle(query: FindPostByIdQuery): List<Map<String, String>> {
+    fun handle(query: FindPostByIdQuery): List<Post> {
 
         if (!repositoriousuario.existsByUuid(query.id)) {
             return emptyList()
@@ -28,6 +29,6 @@ class FindPostByIdHandler(
         }
 
         // Retorna la lista de posts convertida en una lista de Map<String, String>
-        return posts.map { it.toPrimitives() }
+        return posts
     }
 }
