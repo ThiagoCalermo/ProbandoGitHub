@@ -25,7 +25,7 @@ class FindPostByIdHandler(
 
         // Si no se encontraron posts, se lanza una excepción
         if (posts.isEmpty()) {
-            throw NotFoundException("No se encontraron posts para el usuario con ID: ${query.id}")
+            return emptyList()
         }
 
         // Retorna la lista de posts convertida en una lista de Map<String, String>

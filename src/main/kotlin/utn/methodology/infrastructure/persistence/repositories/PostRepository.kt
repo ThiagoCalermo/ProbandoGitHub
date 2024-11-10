@@ -92,5 +92,30 @@ class PostRepository(val database: MongoDatabase) : postrepository {
             Post.fromPrimitives(it as Map<String, Any>)
         }
     }
+
+    fun findPostsByFollowedUsersWithFilters(
+        followedUserIds: List<String>,
+        order: String = "DESC",
+        limit: Int? = null,
+        offset: Int? = null
+    ): List<Post> {
+        // Filtro que selecciona posts de los usuarios seguidos
+        val filter = Document("userId", Document("\$in", followedUserIds))
+        val sortOrder = if (order == "ASC") 1 else -1
+
+        var query = colección.find(filter)
+
+        if (offset != null) {
+            query = query.skip(offset)
+        }
+        if (limit != null) {
+            query = query.limit(limit)
+        }
+
+        query = query.sort(Document("createdAt", sortOrder))
+
+        val primitives = query.toList()
+        return primitives.map { Post.fromPrimitives(it as Map<String, Any>) }
+    }
 }
 
