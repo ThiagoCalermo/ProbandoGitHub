@@ -20,6 +20,7 @@ import utn.methodology.application.queryhandlers.FindUserByUsernameHandler
 import utn.methodology.domain.entities.Usuario
 import utn.methodology.infrastructure.http.actions.FindUserByIdAction
 import utn.methodology.infrastructure.http.actions.FindUserByUsernameAction
+import utn.methodology.infrastructure.http.dtos.UserResponse
 
 fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONGO
     val mongoDatabase = connectToMongoDB()      // Action y CreateUserHandler ya creados
@@ -101,7 +102,18 @@ fun Application.userRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
         get("/users") {
             val users = userMongoUserRepository.recuperarTodos();
 
-            call.respond(HttpStatusCode.OK, Json.encodeToString(users))
+            val userResponse = users.map { user ->
+                UserResponse(
+                    uuid = user.uuid,
+                    name = user.name,
+                    userName = user.userName,
+                    email = user.email,
+                    seguidos = user.seguidos,
+                    seguidores = user.seguidores
+                )
+            }
+
+            call.respond(HttpStatusCode.OK, Json.encodeToString(userResponse))
         }
 
 

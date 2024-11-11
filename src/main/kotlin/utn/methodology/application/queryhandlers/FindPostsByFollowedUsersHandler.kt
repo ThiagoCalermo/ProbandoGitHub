@@ -13,7 +13,9 @@ class FindPostsByFollowedUsersHandler(
     fun handle(query: FindPostByIdQuery): List<Post> {
         // Verificar si el usuario existe
         val usuario = repositorioUsuario.RecuperarPorId(query.id)
-            ?: throw NotFoundException("Usuario no encontrado con ID: ${query.id}")
+            ?: null
+
+        if(usuario == null) return emptyList()
 
         // Obtener la lista de IDs de los usuarios seguidos
         val followedUserIds = usuario.seguidos
