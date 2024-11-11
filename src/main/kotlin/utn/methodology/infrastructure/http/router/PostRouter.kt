@@ -88,7 +88,7 @@ fun Application.postRouter() {             // NECESITAMOS UNA BASE DE DATOS MONG
             }
         }
 
-        get("/posts/user/{userId}") {
+        get("/posts/timeline/{userId}") {
             // Extraer el parámetro de ruta `userId`
             val userId = call.parameters["userId"]
             val order = call.request.queryParameters["order"] ?: "DESC" // Valor por defecto DESC
